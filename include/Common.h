@@ -28,4 +28,6 @@ typedef Vec3<s32> Vec3i;
 #define TRUE 1
 #define FALSE 0
 
+extern u32 * gMainPointer;
+
 #endif
