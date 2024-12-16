@@ -1,7 +1,7 @@
 #ifndef ARRAY_H_
 #define ARRAY_H_
 
-#include "Types.h"
+#include "Common.h"
 
 template <typename T, u32 entries>
 struct Array

@@ -4,8 +4,6 @@
 #include "Array.h"
 #include "Hero.h"
 
-extern u32 * gMainPointer;
-
 typedef MutableArray<Hero *, 4> MutableHeroArray;
 
 typedef struct HeroLoader

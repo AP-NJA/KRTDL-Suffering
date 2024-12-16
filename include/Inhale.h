@@ -1,18 +1,14 @@
 #ifndef KIRBY_H_
 #define KIRBY_H_
 
-#include "Types.h"
+#include "Array.h"
 
 typedef struct InhaledItemData
 {
     u32 mAbilityOnInhale;
 } InhaledItemData;
 
-typedef struct MutableInhaleArray
-{
-    u32 mArrayCount;
-    InhaledItemData mArrays[10];
-} MutableInhaleArray;
+typedef MutableArray<InhaledItemData, 10> MutableInhaleArray;
 
 typedef struct Inhale
 {

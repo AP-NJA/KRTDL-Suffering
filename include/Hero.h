@@ -1,7 +1,7 @@
 #ifndef HERO_H_
 #define HERO_H_
 
-#include "Types.h"
+#include "Common.h"
 
 typedef struct Pointer
 {
