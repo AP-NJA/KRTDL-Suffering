@@ -15,11 +15,11 @@ void Invincible::disableIntangibility()
 // Hook into address 804F054C
 void disableHook(void)
 {
-    Gameplay * gameplay = Gameplay::getProtagData(gMainPointer);
+    HeroLoader * heroLoaderData = HeroLoader::getProtagData(gMainPointer);
 
-    for (u32 i = 0; i < gameplay->mHeroData.mArrayCount; i++)
+    for (u32 i = 0; i < heroLoaderData->mHeroData.mArrayCount; i++)
     {
-        Hero * heroData = gameplay->mHeroData.mArrays[i];
+        Hero * heroData = heroLoaderData->mHeroData.mArray[i];
         Invincible * invincibleData = Invincible::getInvincData(heroData);
 
         invincibleData->disableIntangibility();

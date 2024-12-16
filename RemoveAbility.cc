@@ -18,7 +18,7 @@ u8 Ability::onSwallowGain()
 {
     u8 result = FALSE;
     MutableInhaleArray * inhaleArray = &mInhaleData.mAbilityEntity;
-    InhaledItemData * entityData = &inhaleArray->mArrays[0];
+    InhaledItemData * entityData = &inhaleArray->mArray[0];
 
     if ((inhaleArray->mArrayCount != 0) && (entityData->mAbilityOnInhale != SLEEP))
     {
@@ -32,7 +32,7 @@ u8 Ability::onSwallowGain()
 void Ability::removeAbility()
 {
     MutableInhaleArray * inhaleArray = &mInhaleData.mAbilityEntity;
-    InhaledItemData * itemData = &inhaleArray->mArrays[0];
+    InhaledItemData * itemData = &inhaleArray->mArray[0];
 
     // Disables mixing
     if (inhaleArray->mArrayCount >= 3)
@@ -58,11 +58,11 @@ void Ability::removeAbility()
 // Hook into address 804E9F44
 void abilityHook(void)
 {
-    Gameplay * gameplay = Gameplay::getProtagData(gMainPointer);
+    HeroLoader * heroLoaderData = HeroLoader::getProtagData(gMainPointer);
 
-    for (u32 i = 0; i < gameplay->mHeroData.mArrayCount; i++)
+    for (u32 i = 0; i < heroLoaderData->mHeroData.mArrayCount; i++)
     {
-        Hero * heroData = gameplay->mHeroData.mArrays[i];
+        Hero * heroData = heroLoaderData->mHeroData.mArray[i];
         Ability * abilityData = Ability::getAbilityData(heroData);
 
         abilityData->removeAbility();
