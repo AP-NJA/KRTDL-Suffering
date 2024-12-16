@@ -19,7 +19,7 @@ void disableHook(void)
 
     for (u32 i = 0; i < heroLoaderData->mHeroData.mArrayCount; i++)
     {
-        Hero * heroData = heroLoaderData->mHeroData.mArray[i];
+        Hero * heroData = heroLoaderData->mHeroData.mArray.mData[i];
         Invincible * invincibleData = Invincible::getInvincData(heroData);
 
         invincibleData->disableIntangibility();

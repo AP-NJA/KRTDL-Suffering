@@ -6,14 +6,16 @@
 template <typename T, u32 entries>
 struct Array
 {
-    T mArray[entries];
+    T mData[entries];
 };
 
 template <typename T, u32 entries>
 struct MutableArray
 {
     u32 mArrayCount;
-    T mArray[entries];
+    Array<T, entries> mArray;
 };
+
+// To summarize, grab the array and then grab its data.
 
 #endif
