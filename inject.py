@@ -1,5 +1,23 @@
+import sys
 import os
 import subprocess
+
+
+def getPlatformCommands() -> tuple:
+    copyCommand = ""
+    deleteCommand = ""
+
+    if (sys.platform == "win32"):
+        copyCommand = "copy"
+        deleteCommand = "del"
+    else:
+        copyCommand = "cp"
+        deleteCommand = "rm"
+    return copyCommand, deleteCommand
+
+
+copyCommand, deleteCommand = getPlatformCommands()
+
 
 hookAddress = hex(0x808D120C)
 
@@ -36,7 +54,7 @@ for sourceFiles in codeFiles:
         f"powerpc-eabi-g++ {sourceFiles} {compilerFlagsString}", shell=True)
 
 print("[3/4]: Linking object files...")
-subprocess.run("mkdir -p build", shell=True)
+subprocess.run("mkdir build", shell=True)
 
 for sourceFiles in codeFiles:
     objects = os.path.basename(sourceFiles)
@@ -46,11 +64,10 @@ for sourceFiles in codeFiles:
 objectFilesString = " ".join([*objectFiles])
 subprocess.run(f"powerpc-eabi-ld hook.o {linkerFlagsString} {
                objectFilesString} -o build/linked_output.elf", shell=True)
-
-subprocess.run(f"rm hook.o {objectFilesString}", shell=True)
+subprocess.run(f"{deleteCommand} hook.o {objectFilesString}", shell=True)
 
 print("[4/4]: Patching ELF into DOL file...")
-subprocess.run(f"cp {dolLocation} build", shell=True)
+subprocess.run(f"{copyCommand} {dolLocation} build", shell=True)
 subprocess.run(
     f"wit dolpatch build/main.dol new=text,AUTO xml={patchXML} entry={hookAddress} --source .", shell=True)
 
