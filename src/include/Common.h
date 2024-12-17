@@ -25,6 +25,13 @@ struct Vec3
 typedef Vec3<f32> Vec3f;
 typedef Vec3<s32> Vec3i;
 
+template <typename T>
+struct ExplicitSmartPointer
+{
+    u32 * mUnk0;
+    T * mBuffer;
+};
+
 #define TRUE 1
 #define FALSE 0
 
