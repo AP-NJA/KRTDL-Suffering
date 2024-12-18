@@ -15,22 +15,14 @@ typedef float f32;
 typedef double f64;
 
 template <typename T>
-struct Vec3
-{
-    T x;
-    T y;
-    T z;
-};
-
-typedef Vec3<f32> Vec3f;
-typedef Vec3<s32> Vec3i;
-
-template <typename T>
-struct ExplicitSmartPointer
+struct ExplicitScopedPointer
 {
     u32 * mUnk0;
     T * mBuffer;
 };
+
+template <typename T>
+extern T * loadScopedData(ExplicitScopedPointer<T> * scopedPointer);
 
 #define TRUE 1
 #define FALSE 0
