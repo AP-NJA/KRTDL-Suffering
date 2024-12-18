@@ -1,7 +1,7 @@
 #ifndef ABILITY_H_
 #define ABILITY_H_
 
-#include "HeroLoader.h"
+#include "Hero.h"
 #include "Inhale.h"
 
 #define NORMAL 0

@@ -1,7 +1,7 @@
 #ifndef INVINCIBLE_H_
 #define INVINCIBLE_H_
 
-#include "HeroLoader.h"
+#include "Hero.h"
 
 typedef struct Intangible
 {
