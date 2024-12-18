@@ -58,7 +58,7 @@ void Ability::removeAbility()
 // Hook into address 804E9F44
 void abilityHook(void)
 {
-    HeroLoader * heroLoaderData = HeroLoader::getProtagData(gMainPointer);
+    HeroLoader * heroLoaderData = HeroLoader::loadProtagInfo(gMainPointer);
 
     for (u32 i = 0; i < heroLoaderData->mHeroData.mArrayCount; i++)
     {
@@ -68,7 +68,7 @@ void abilityHook(void)
         abilityData->removeAbility();
         abilityData->mUpdateState = FALSE; // To reset the variable for later uses
 
-        u32 * exitData = (u32 *)getStructData(&heroData->mUnkPtr); // hook: 804E9F44
+        u32 * exitData = loadScopedData<u32>(&heroData->mUnkPtr); // hook: 804E9F44
     }
 
     return;
