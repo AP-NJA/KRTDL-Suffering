@@ -16,12 +16,9 @@ typedef MutableArray<Hero *, 4> MutableHeroArray;
 typedef struct HeroLoader
 {
     u8 x0[0x9C - 0x0];
-    MutableHeroArray mHeroData;
+    MutableHeroArray mMutableHeroArray;
     u8 xB0[0x16C - 0xB0];
     u8 mInvulnerableState;
-
-public:
-    static HeroLoader * loadProtagInfo(u32 * pointer);
 } HeroLoader;
 
 #endif
