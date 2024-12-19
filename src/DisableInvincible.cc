@@ -1,3 +1,4 @@
+#include "include/Component.h"
 #include "include/Invincible.h"
 
 // Main function responsible for disabling intangibility
@@ -15,11 +16,11 @@ void Invincible::disableIntangibility()
 // Hook into address 804F054C
 void disableHook(void)
 {
-    HeroLoader * heroLoaderData = HeroLoader::loadProtagInfo(gMainPointer);
+    HeroLoader * heroLoaderData = Component::loadProtagInfo(gMainPointer);
 
-    for (u32 i = 0; i < heroLoaderData->mHeroData.mArrayCount; i++)
+    for (u32 i = 0; i < heroLoaderData->mMutableHeroArray.mArrayCount; i++)
     {
-        Hero * heroData = heroLoaderData->mHeroData.mArray.mData[i];
+        Hero * heroData = heroLoaderData->mMutableHeroArray.mArray.mData[i];
         Invincible * invincibleData = Invincible::getInvincData(heroData);
 
         invincibleData->disableIntangibility();

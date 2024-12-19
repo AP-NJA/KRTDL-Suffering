@@ -1,4 +1,5 @@
 #include "include/Ability.h"
+#include "include/Component.h"
 
 // Boolean that checks if the method of gaining ability is anything but swallowing
 u8 Ability::checkAbility()
@@ -58,11 +59,11 @@ void Ability::removeAbility()
 // Hook into address 804E9F44
 void abilityHook(void)
 {
-    HeroLoader * heroLoaderData = HeroLoader::loadProtagInfo(gMainPointer);
+    HeroLoader * heroLoaderData = Component::loadProtagInfo(gMainPointer);
 
-    for (u32 i = 0; i < heroLoaderData->mHeroData.mArrayCount; i++)
+    for (u32 i = 0; i < heroLoaderData->mMutableHeroArray.mArrayCount; i++)
     {
-        Hero * heroData = heroLoaderData->mHeroData.mArray.mData[i];
+        Hero * heroData = heroLoaderData->mMutableHeroArray.mArray.mData[i];
         Ability * abilityData = Ability::getAbilityData(heroData);
 
         abilityData->removeAbility();
