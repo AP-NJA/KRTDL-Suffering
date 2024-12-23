@@ -1,5 +1,4 @@
-#include "include/Component.h"
-#include "include/Invincible.h"
+#include "include/Hero.h"
 
 // Main function responsible for disabling intangibility
 void Invincible::disableIntangibility()
@@ -21,7 +20,7 @@ void disableHook(void)
     for (u32 i = 0; i < heroLoaderData->mMutableHeroArray.mArrayCount; i++)
     {
         Hero * heroData = heroLoaderData->mMutableHeroArray.mArray.mData[i];
-        Invincible * invincibleData = Invincible::getInvincData(heroData);
+        Invincible * invincibleData = heroData->getInvincData();
 
         invincibleData->disableIntangibility();
 
