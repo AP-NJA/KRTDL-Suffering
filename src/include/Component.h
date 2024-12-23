@@ -1,7 +1,9 @@
 #ifndef COMPONENT_H_
 #define COMPONENT_H_
 
-#include "Hero.h"
+#include "Common.h"
+
+struct HeroLoader;
 
 typedef struct Component
 {

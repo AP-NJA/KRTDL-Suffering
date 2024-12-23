@@ -1,7 +1,7 @@
 #ifndef ABILITY_H_
 #define ABILITY_H_
 
-#include "Hero.h"
+#include "Common.h"
 #include "Inhale.h"
 
 #define NORMAL 0
@@ -39,6 +39,8 @@
 #define META_KNIGHT 32
 #define KING_DEDEDE 33
 #define BANDANA_DEE 34
+
+struct Hero;
 
 typedef struct Ability
 {
