@@ -8,8 +8,8 @@
 "_ZN8Grounded15getGroundedDataEP4Hero" = 0x804eda94;
 "getInputData" = 0x804edae4;
 "_ZN6Effect13getEffectDataEP4Hero" = 0x804edaf4;
-"_ZN7Ability14getAbilityDataEP4Hero" = 0x804edb0c;
-"_ZN10Invincible13getInvincDataEP4Hero" = 0x804edb1c;
+"_ZN4Hero14getAbilityDataEv" = 0x804edb0c;
+"_ZN4Hero13getInvincDataEv" = 0x804edb1c;
 /* "_ZN12MutableArrayIP4HeroLj4EEixEj" = 0x804f4908; */
 
 "gMainPointer" = 0x809ed108;
