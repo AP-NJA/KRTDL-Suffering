@@ -63,7 +63,7 @@ void abilityHook(void)
     for (u32 i = 0; i < heroLoaderData->mMutableHeroArray.mArrayCount; i++)
     {
         Hero * heroData = heroLoaderData->mMutableHeroArray.mArray.mData[i];
-        Ability * abilityData = Ability::getAbilityData(heroData);
+        Ability * abilityData = heroData->getAbilityData();
 
         abilityData->removeAbility();
         abilityData->mUpdateState = FALSE; // To reset the variable for later uses
