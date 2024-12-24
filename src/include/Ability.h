@@ -61,8 +61,5 @@ typedef struct Ability
     u8 onSwallowGain();
     void removeAbility();
     void randomizeAbility();
-
-public:
-    static Ability * getAbilityData(Hero * heroData); // 804EDB0C
 } Ability;
 #endif

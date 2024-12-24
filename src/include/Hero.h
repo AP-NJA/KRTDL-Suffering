@@ -15,7 +15,7 @@ typedef struct Hero
     u8 x12C[0x18C - 0x12C];
     ExplicitScopedPointer<u32> mUnkPtr; // x18C
 
-    Ability * getAbilityData(); //
+    Ability * getAbilityData(); // 804EDB0C
     Invincible * getInvincData(); // 804EDB1C
 } Hero;
 
