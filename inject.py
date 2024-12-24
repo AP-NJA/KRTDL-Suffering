@@ -1,6 +1,6 @@
-import sys
 import os
 import subprocess
+import shutil
 
 hookAddress = hex(0x808D120C)
 
@@ -31,26 +31,10 @@ objectFiles = []
 # Utility functions
 
 
-def getPlatformCommands() -> tuple:
-    copyCommand = ""
-    deleteCommand = ""
-
-    if (sys.platform == "win32"):
-        copyCommand = "copy"
-        deleteCommand = "del"
-    else:
-        copyCommand = "cp"
-        deleteCommand = "rm"
-    return copyCommand, deleteCommand
-
-
 def splitExtension(file: str):
     baseName = os.path.basename(file)
     pre, ext = os.path.splitext(baseName)
     return pre
-
-
-copyCommand, deleteCommand = getPlatformCommands()
 
 
 def createCodeHook():
@@ -73,9 +57,7 @@ def linkObjectFiles():
     print("[3/4]: Linking object files...")
 
     if os.path.join("build") is False:
-        subprocess.run(
-            "mkdir build", shell=True
-        )
+        os.mkdir("build")
 
     for sourceFiles in codeFiles:
         prefix = splitExtension(sourceFiles)
@@ -85,17 +67,17 @@ def linkObjectFiles():
     subprocess.run(
         f"powerpc-eabi-ld hook.o {linkerFlagsString} {objectFilesString} -o build/linked_output.elf", shell=True
     )
-    subprocess.run(
-        f"{deleteCommand} hook.o {objectFilesString}", shell=True
-    )
+
+    os.remove("hook.o")
+
+    for objects in objectFiles:
+        os.remove(f"{objects}")
 
 
 def patchELFIntoDOL():
     print("[4/4]: Patching ELF into DOL file...")
 
-    subprocess.run(
-        f"{copyCommand} {dolLocation} build", shell=True
-    )
+    shutil.copy(f"{dolLocation}", "build")
     subprocess.run(
         f"wit dolpatch build/main.dol new=text,AUTO xml={patchXML} entry={hookAddress} --source .", shell=True
     )
