@@ -1,5 +1,5 @@
-#ifndef KIRBY_H_
-#define KIRBY_H_
+#ifndef INHALE_H_
+#define INHALE_H_
 
 #include "Array.h"
 
