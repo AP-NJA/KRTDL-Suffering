@@ -28,7 +28,7 @@ codeFiles = [
 
 objectFiles = []
 
-# Utility functions
+# Utility
 
 
 def splitExtension(file: str):
@@ -37,20 +37,32 @@ def splitExtension(file: str):
     return pre
 
 
+class CMDCommands:
+    def __init__(self, program):
+        self.program = program
+
+    def execute(self, args: str):
+        subprocess.run(f"{self.program} {args}", shell=True)
+
+
+# commands
+
+assembler = CMDCommands("powerpc-eabi-as")
+compiler = CMDCommands("powerpc-eabi-g++")
+linker = CMDCommands("powerpc-eabi-ld")
+WIT = CMDCommands("wit")
+
+
 def createCodeHook():
     print("[1/4]: Creating code hook...")
-    subprocess.run(
-        f"powerpc-eabi-as {hookFile} -o hook.o", shell=True
-    )
+    assembler.execute(f"{hookFile} -o hook.o")
 
 
 def compileSourceFiles():
     print("[2/4]: Compiling source files...")
 
     for sourceFiles in codeFiles:
-        subprocess.run(
-            f"powerpc-eabi-g++ {sourceFiles} {compilerFlagsString}", shell=True
-        )
+        compiler.execute(f"{sourceFiles} {compilerFlagsString}")
 
 
 def linkObjectFiles():
@@ -64,8 +76,9 @@ def linkObjectFiles():
         objectFiles.append(f"{prefix}.o")
 
     objectFilesString = " ".join([*objectFiles])
-    subprocess.run(
-        f"powerpc-eabi-ld hook.o {linkerFlagsString} {objectFilesString} -o build/linked_output.elf", shell=True
+    linker.execute(
+        f"{linkerFlagsString} hook.o {
+            objectFilesString} -o build/linked_output.elf"
     )
 
     os.remove("hook.o")
@@ -78,8 +91,9 @@ def patchELFIntoDOL():
     print("[4/4]: Patching ELF into DOL file...")
 
     shutil.copy(f"{dolLocation}", "build")
-    subprocess.run(
-        f"wit dolpatch build/main.dol new=text,AUTO xml={patchXML} entry={hookAddress} --source .", shell=True
+    WIT.execute(
+        f"dolpatch build/main.dol new=text,AUTO xml={
+            patchXML} entry={hookAddress} --source ."
     )
 
 
