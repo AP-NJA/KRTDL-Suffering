@@ -1,4 +1,4 @@
-#include "include/Hero.h"
+#include "Gameplay/Hero/Hero.h"
 
 // Boolean that checks if the method of gaining ability is anything but swallowing
 u8 Ability::checkAbility()
@@ -49,26 +49,6 @@ void Ability::removeAbility()
     {
         mDiscardAbility = TRUE;
         mNextAbility = NORMAL;
-        mUpdateState = TRUE;
-    }
-
-    return;
-}
-
-// Hook into address 804E9F44
-void abilityHook(void)
-{
-    HeroLoader * heroLoaderData = Component::loadProtagInfo(gMainPointer);
-
-    for (u32 i = 0; i < heroLoaderData->mMutableHeroArray.mArrayCount; i++)
-    {
-        Hero * heroData = heroLoaderData->mMutableHeroArray.mArray.mData[i];
-        Ability * abilityData = heroData->getAbilityData();
-
-        abilityData->removeAbility();
-        abilityData->mUpdateState = FALSE; // To reset the variable for later uses
-
-        u32 * exitData = loadScopedData<u32>(&heroData->mUnkPtr); // hook: 804E9F44
     }
 
     return;

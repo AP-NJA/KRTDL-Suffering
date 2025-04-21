@@ -8,7 +8,10 @@ dolLocation = os.path.join("DOL", "main.dol")
 patchXML = os.path.join("patch.xml")
 linkerScript = os.path.join("execute.ld")
 
+includeFolder = os.path.join("include")
+
 compilerFlags = [
+    "-isystem", f"{includeFolder}",
     "-O0",
     "-c"
 ]
@@ -23,7 +26,9 @@ hookFile = os.path.join("hook.s")
 
 codeFiles = [
     os.path.join("src", "RemoveAbility.cc"),
-    os.path.join("src", "DisableInvincible.cc")
+    os.path.join("src", "DisableInvincible.cc"),
+    os.path.join("src", "main.cc")
+    # os.path.join("src", "AbilityModifier.cc")
 ]
 
 objectFiles = []
