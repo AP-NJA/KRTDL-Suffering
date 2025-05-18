@@ -25,8 +25,9 @@ linkerFlagsString = " ".join([*linkerFlags])
 hookFile = os.path.join("hook.s")
 
 codeFiles = [
+    os.path.join("src", "GuardOverhaul.cc"),
+    os.path.join("src", "InvincibleTweaks.cc"),
     os.path.join("src", "RemoveAbility.cc"),
-    os.path.join("src", "DisableInvincible.cc"),
     os.path.join("src", "main.cc")
     # os.path.join("src", "AbilityModifier.cc")
 ]
@@ -73,7 +74,7 @@ def compileSourceFiles():
 def linkObjectFiles():
     print("[3/4]: Linking object files...")
 
-    if os.path.join("build") is False:
+    if not os.path.exists("build"):
         os.mkdir("build")
 
     for sourceFiles in codeFiles:
