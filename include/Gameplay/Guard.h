@@ -2,18 +2,31 @@
 #define GUARD_H_
 
 #include "Common/Common.h"
+#include "Gameplay/Hero/Invincible.h"
 
 struct Hero;
 
 typedef struct Guard
 {
-    Hero * mHeroData;
-    u8 mEnableGuardState;
-    u8 mEnableGuardStateFlash;
+    Hero * mHeroData; // x0
+    u8 mEnableGuardState; // x4
+    u8 mEnableGuardStateFlash; // x5
     u8 x6[0x8 - 0x6];
-    u32 mGuardFlashCycle;
-
-    u8 guardCheck();
+    u32 mGuardFlashCycle; // x8
 } Guard;
+
+typedef struct GuardOverhaul
+{
+    u32 mGuardFrames; // x0
+    u32 mCooldownFrames; // x4
+    u8 mSuccessfulBlock; // x5
+
+    u8 guardCheck(Guard * guardData);
+    u8 blockStateHandler(hero::Invincible * invincibleData);
+    void guardTimer(Guard * guardData);
+    void onSuccess(hero::Invincible * invincibleData);
+    void onMiss(Guard * guardData);
+    void runGuardOverhaul(Hero * heroData);
+} GuardOverhaul;
 
 #endif

@@ -11,3 +11,15 @@ void hero::Invincible::disableIntangibility()
 
     return;
 }
+
+// Function responsible for enabling intangibility
+void hero::Invincible::enableIntangibility(u32 frames)
+{
+    State * stateData = mHeroData->mStateData.loadPointer();
+
+    mIntangibleData.mIntangibleFrames = frames;
+    stateData->mIsVulnerable = FALSE;
+    mEnableIntangibleFlash = TRUE;
+
+    return;
+}
