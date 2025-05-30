@@ -17,10 +17,13 @@ typedef struct Guard
 
 typedef struct GuardOverhaul
 {
-    u32 mGuardFrames; // x0
-    u32 mCooldownFrames; // x4
-    u8 mSuccessfulBlock; // x5
+    u32 mGuardFrames;
+    u32 mResetFrames;
+    u32 mCooldownFrames;
+    u8 mSuccessfulBlock;
 
+    GuardOverhaul();
+    void resetGuardVariables();
     u8 guardCheck(Guard * guardData);
     u8 blockStateHandler(hero::Invincible * invincibleData);
     void guardTimer(Guard * guardData);
@@ -28,5 +31,7 @@ typedef struct GuardOverhaul
     void onMiss(Guard * guardData);
     void runGuardOverhaul(Hero * heroData);
 } GuardOverhaul;
+
+extern GuardOverhaul overhaulTable[4];
 
 #endif

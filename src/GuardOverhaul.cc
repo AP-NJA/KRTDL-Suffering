@@ -1,12 +1,28 @@
 #include "Gameplay/Hero/Hero.h"
-#include <Gameplay/Guard.h>
-#include <Gameplay/Hero/Invincible.h>
 
 #define GUARD_INTERVAL 30
+#define GUARD_RESET 60
 #define GUARD_SUCCESS 120
 #define GUARD_PENALTY 120
 
-// Check if currently guarding
+// Initialize guard overhaul data
+GuardOverhaul::GuardOverhaul()
+{
+    mGuardFrames = 0;
+    mResetFrames = 0;
+    mCooldownFrames = 0;
+    mSuccessfulBlock = FALSE;
+}
+
+// Reset guard overhaul data
+void GuardOverhaul::resetGuardVariables()
+{
+    mGuardFrames = 0;
+    mResetFrames = 0;
+    mCooldownFrames = 0;
+}
+
+// Check if character is guarding
 u8 GuardOverhaul::guardCheck(Guard * guardData)
 {
     u8 result = FALSE;
@@ -19,7 +35,7 @@ u8 GuardOverhaul::guardCheck(Guard * guardData)
     return result;
 }
 
-// Check if player has blocked during guard
+// Check if guard resulted in successful block
 u8 GuardOverhaul::blockStateHandler(hero::Invincible * invincibleData)
 {
     u8 result = FALSE;
@@ -37,14 +53,25 @@ u8 GuardOverhaul::blockStateHandler(hero::Invincible * invincibleData)
     return result;
 }
 
-// Handle guard interval
+// Handle character guard timer
 void GuardOverhaul::guardTimer(Guard * guardData)
 {
     u8 guardState = guardCheck(guardData);
 
     if ((guardState == FALSE) && (mCooldownFrames == 0))
     {
-        mGuardFrames = 0;
+        if (mGuardFrames == 0)
+        {
+            return;
+        }
+
+        if (mResetFrames > GUARD_RESET)
+        {
+            resetGuardVariables();
+            return;
+        }
+
+        mResetFrames++;
         return;
     }
 
@@ -55,33 +82,32 @@ void GuardOverhaul::guardTimer(Guard * guardData)
     }
 
     mGuardFrames++;
-
     return;
 }
 
-// Handle guard success effect
+// Run if guard block was successful
 void GuardOverhaul::onSuccess(hero::Invincible * invincibleData)
 {
     mSuccessfulBlock = TRUE;
     invincibleData->enableIntangibility(GUARD_SUCCESS);
+    return;
 }
 
-// Handle guard miss punishment
+// Run if guard timer ran out before block
 void GuardOverhaul::onMiss(Guard * guardData)
 {
     if (mCooldownFrames > GUARD_PENALTY)
     {
-        mCooldownFrames = 0;
+        resetGuardVariables();
         return;
     }
 
-    guardData->mEnableGuardState = FALSE;
     mCooldownFrames++;
-
+    guardData->mEnableGuardState = FALSE;
     return;
 }
 
-// Main function responsible for running the guard overhaul
+// Integrate the guard overhaul
 void GuardOverhaul::runGuardOverhaul(Hero * heroData)
 {
     Guard * guardData = heroData->mGuardData.loadPointer();

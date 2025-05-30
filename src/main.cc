@@ -1,11 +1,8 @@
 #include "Gameplay/Component.h"
-#include <Common/Array.h>
 
-// Savestate savestateData = { 0 };
+GuardOverhaul overhaulTable[4] = {};
 
-GuardOverhaul overhaulTable[4] = { 0, 0, 0, 0 };
-
-// Hook into 804E9F44
+// Hook into 8035DAE4
 void mainHook(void)
 {
     HeroLoader * heroLoader = Component::loadProtagInfo(gMainPointer);
@@ -20,6 +17,6 @@ void mainHook(void)
         overhaulTable[i].runGuardOverhaul(heroData);
     }
 
-    HeroLoader * exitData = Component::loadProtagInfo(gMainPointer); // hook: 8035DAE4
+    HeroLoader * exitData = Component::loadProtagInfo(gMainPointer);
     return;
 }
