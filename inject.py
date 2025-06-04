@@ -29,12 +29,16 @@ codeFiles = [
     os.path.join("src", "InvincibleTweaks.cc"),
     os.path.join("src", "RemoveAbility.cc"),
     os.path.join("src", "main.cc")
-    # os.path.join("src", "AbilityModifier.cc")
+    # os.path.join("src", "abilitymodifier.cc")
 ]
 
 objectFiles = []
 
 # Utility
+
+
+def cut(source: str, destination: str, file: str):
+    shutil.move(os.path.join(source, file), os.path.join(destination, file))
 
 
 def splitExtension(file: str):
@@ -60,28 +64,39 @@ WIT = CMDCommands("wit")
 
 
 def createCodeHook():
-    print("[1/4]: Creating code hook...")
+    print("[1/5]: Creating code hook...")
     assembler.execute(f"{hookFile} -o hook.o")
 
 
 def compileSourceFiles():
-    print("[2/4]: Compiling source files...")
+    print("[2/5]: Compiling source files...")
 
     for sourceFiles in codeFiles:
         compiler.execute(f"{sourceFiles} {compilerFlagsString}")
 
 
 def linkObjectFiles():
-    print("[3/4]: Linking object files...")
+    print("[3/5]: Linking object files...")
 
     if not os.path.exists("build"):
         os.mkdir("build")
+
+    if os.path.exists("objects"):
+        shutil.rmtree("objects", ignore_errors=True)
+    os.mkdir("objects")
 
     for sourceFiles in codeFiles:
         prefix = splitExtension(sourceFiles)
         objectFiles.append(f"{prefix}.o")
 
+    for key, objects in enumerate(objectFiles):
+        cut(".", "objects", f"{objects}")
+        objectFiles[key] = os.path.join("objects", f"{objects}")
+
     objectFilesString = " ".join([*objectFiles])
+
+    print(objectFilesString)
+
     linker.execute(
         f"{linkerFlagsString} hook.o {
             objectFilesString} -o build/linked_output.elf"
@@ -89,12 +104,9 @@ def linkObjectFiles():
 
     os.remove("hook.o")
 
-    for objects in objectFiles:
-        os.remove(f"{objects}")
-
 
 def patchELFIntoDOL():
-    print("[4/4]: Patching ELF into DOL file...")
+    print("[4/5]: Patching ELF into DOL file...")
 
     shutil.copy(f"{dolLocation}", "build")
     WIT.execute(
@@ -103,11 +115,21 @@ def patchELFIntoDOL():
     )
 
 
+def replaceDumpDOL():
+    print("[5/5]: Replacing DOL in game dump...")
+
+    buildDirectory = os.path.join("build", "main.dol")
+    dumpDirectory = os.path.join("Dump", "sys")
+
+    shutil.copy(buildDirectory, dumpDirectory)
+
+
 def injectMain():
     createCodeHook()
     compileSourceFiles()
     linkObjectFiles()
     patchELFIntoDOL()
+    replaceDumpDOL()
     print("Done :)")
 
 
