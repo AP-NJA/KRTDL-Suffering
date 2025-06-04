@@ -1,3 +1,5 @@
+/* Borrowed from spookian's HelperAI project (https://github.com/spookian/HelperAI.git) */
+
 INCLUDE symbol.ld
 
 ENTRY(HOOK)
