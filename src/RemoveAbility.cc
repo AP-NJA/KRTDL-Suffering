@@ -1,4 +1,4 @@
-#include "Gameplay/Hero/Hero.h"
+#include "Gameplay/Hero/Ability.h"
 
 // Boolean that checks if the method of gaining ability is anything but swallowing
 u8 Ability::checkAbility()
