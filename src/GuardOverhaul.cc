@@ -12,6 +12,7 @@ GuardOverhaul::GuardOverhaul()
     mResetFrames = 0;
     mCooldownFrames = 0;
     mSuccessfulBlock = FALSE;
+    mParticleEffectPlayed = FALSE;
 }
 
 // Reset guard overhaul data
@@ -20,14 +21,30 @@ void GuardOverhaul::resetGuardVariables()
     mGuardFrames = 0;
     mResetFrames = 0;
     mCooldownFrames = 0;
+    mParticleEffectPlayed = FALSE;
 }
 
-// Check if character is guarding
-u8 GuardOverhaul::guardCheck(Guard * guardData)
+// Set variables for overhauled guard particle effects
+void GuardOverhaul::setGuardParticleEffect()
+{
+    ParticleSpawn particleSpawn;
+    Vec3f position = { -1.0f, 0.0f, 0.0f };
+    Vec3f scale = { 0.0f, 1.0f, 0.0f };
+    Vec3f skew = { 0.0f, 0.0f, 1.0f };
+    setVariables(particleSpawn, position, scale, skew);
+
+    Vec3f offset = { 0.0f, 0.0f, 0.5f };
+
+    mParticleEffectPlayed = TRUE;
+    mParticleData->spawnParticleEffect(PIGGYBACK_CHARGE, 0, &particleSpawn, &offset);
+}
+
+// Check if guarding
+u8 GuardOverhaul::guardCheck()
 {
     u8 result = FALSE;
 
-    if (guardData->mEnableGuardState == TRUE)
+    if (mGuardData->mEnableGuardState == TRUE)
     {
         result = TRUE;
     }
@@ -36,11 +53,11 @@ u8 GuardOverhaul::guardCheck(Guard * guardData)
 }
 
 // Check if guard resulted in successful block
-u8 GuardOverhaul::blockStateHandler(hero::Invincible * invincibleData)
+u8 GuardOverhaul::blockStateHandler()
 {
     u8 result = FALSE;
 
-    if (invincibleData->mIntangibleData.mIntangibleFrames == 0)
+    if (mInvincibleData->mIntangibleData.mIntangibleFrames == 0)
     {
         mSuccessfulBlock = FALSE;
     }
@@ -53,10 +70,10 @@ u8 GuardOverhaul::blockStateHandler(hero::Invincible * invincibleData)
     return result;
 }
 
-// Handle character guard timer
-void GuardOverhaul::guardTimer(Guard * guardData)
+// Handle guard timer
+void GuardOverhaul::guardTimer()
 {
-    u8 guardState = guardCheck(guardData);
+    u8 guardState = guardCheck();
 
     if ((guardState == FALSE) && (mCooldownFrames == 0))
     {
@@ -77,7 +94,7 @@ void GuardOverhaul::guardTimer(Guard * guardData)
 
     if (mGuardFrames > GUARD_INTERVAL)
     {
-        onMiss(guardData);
+        onMiss();
         return;
     }
 
@@ -86,15 +103,27 @@ void GuardOverhaul::guardTimer(Guard * guardData)
 }
 
 // Run if guard block was successful
-void GuardOverhaul::onSuccess(hero::Invincible * invincibleData)
+void GuardOverhaul::onSuccess()
 {
     mSuccessfulBlock = TRUE;
-    invincibleData->enableIntangibility(GUARD_SUCCESS);
+
+    if (mParticleEffectPlayed == FALSE)
+    {
+        setGuardParticleEffect();
+        mParticleEffectPlayed = TRUE;
+    }
+
+    if (mHPData->mCurrentHP < mHPData->mPreviousHP)
+    {
+        mHPData->mCurrentHP++;
+    }
+
+    mInvincibleData->enableIntangibility(GUARD_SUCCESS);
     return;
 }
 
 // Run if guard timer ran out before block
-void GuardOverhaul::onMiss(Guard * guardData)
+void GuardOverhaul::onMiss()
 {
     if (mCooldownFrames > GUARD_PENALTY)
     {
@@ -103,21 +132,22 @@ void GuardOverhaul::onMiss(Guard * guardData)
     }
 
     mCooldownFrames++;
-    guardData->mEnableGuardState = FALSE;
+    mGuardData->mEnableGuardState = FALSE;
     return;
 }
 
-// Integrate the guard overhaul
 void GuardOverhaul::runGuardOverhaul(Hero * heroData)
 {
-    Guard * guardData = heroData->mGuardData.loadPointer();
-    hero::Invincible * invincibleData = heroData->mInvincibleData.loadPointer();
+    mGuardData = heroData->mGuardData.loadPointer();
+    mHPData = heroData->mHPData.loadPointer();
+    mInvincibleData = heroData->mInvincibleData.loadPointer();
+    mParticleData = &heroData->mParticleLoader.loadPointer()->mStatusParticles;
     State * stateData = heroData->mStateData.loadPointer();
 
-    guardTimer(guardData);
+    guardTimer();
 
-    u8 blockState = blockStateHandler(invincibleData);
-    u8 guardState = guardCheck(guardData);
+    u8 blockState = blockStateHandler();
+    u8 guardState = guardCheck();
 
     if (blockState == TRUE)
     {
@@ -126,10 +156,10 @@ void GuardOverhaul::runGuardOverhaul(Hero * heroData)
 
     if ((guardState == TRUE) && (stateData->mIsVulnerable == FALSE))
     {
-        onSuccess(invincibleData);
+        onSuccess();
         return;
     }
 
-    invincibleData->disableIntangibility();
+    mInvincibleData->disableIntangibility();
     return;
 }

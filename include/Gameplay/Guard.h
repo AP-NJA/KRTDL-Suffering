@@ -2,7 +2,9 @@
 #define GUARD_H_
 
 #include "Common/Common.h"
+#include "Gameplay/HP.h"
 #include "Gameplay/Hero/Invincible.h"
+#include "Gameplay/Particle.h"
 
 struct Hero;
 
@@ -17,21 +19,27 @@ typedef struct Guard
 
 typedef struct GuardOverhaul
 {
+    Guard * mGuardData;
+    HP * mHPData;
+    hero::Invincible * mInvincibleData;
+    Particle * mParticleData;
+
     u32 mGuardFrames;
     u32 mResetFrames;
     u32 mCooldownFrames;
     u8 mSuccessfulBlock;
+    u8 mParticleEffectPlayed;
 
     GuardOverhaul();
     void resetGuardVariables();
-    u8 guardCheck(Guard * guardData);
-    u8 blockStateHandler(hero::Invincible * invincibleData);
-    void guardTimer(Guard * guardData);
-    void onSuccess(hero::Invincible * invincibleData);
-    void onMiss(Guard * guardData);
+    void setGuardParticleEffect();
+    u8 hasParticleEffectPlayed();
+    u8 guardCheck();
+    u8 blockStateHandler();
+    void guardTimer();
+    void onSuccess();
+    void onMiss();
     void runGuardOverhaul(Hero * heroData);
 } GuardOverhaul;
-
-extern GuardOverhaul overhaulTable[4];
 
 #endif
