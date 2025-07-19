@@ -5,6 +5,7 @@
 #include "Gameplay/HP.h"
 #include "Gameplay/Hero/Invincible.h"
 #include "Gameplay/Particle.h"
+#include <Gameplay/State.h>
 
 struct Hero;
 
@@ -23,6 +24,7 @@ typedef struct GuardOverhaul
     HP * mHPData;
     hero::Invincible * mInvincibleData;
     Particle * mParticleData;
+    State * mStateData;
 
     u32 mGuardFrames;
     u32 mResetFrames;
@@ -33,12 +35,12 @@ typedef struct GuardOverhaul
     GuardOverhaul();
     void resetGuardVariables();
     void setGuardParticleEffect();
-    u8 hasParticleEffectPlayed();
-    u8 guardCheck();
-    u8 blockStateHandler();
-    void guardTimer();
+    inline u8 guardCheck();
+    u8 blockCheck();
     void onSuccess();
     void onMiss();
+    void restoreGuard();
+    void guardTimer();
     void runGuardOverhaul(Hero * heroData);
 } GuardOverhaul;
 

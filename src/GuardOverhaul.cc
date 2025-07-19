@@ -28,78 +28,32 @@ void GuardOverhaul::resetGuardVariables()
 void GuardOverhaul::setGuardParticleEffect()
 {
     ParticleSpawn particleSpawn;
+
+    Vec3f offset = { 0.0f, 0.0f, 0.5f };
     Vec3f position = { -1.0f, 0.0f, 0.0f };
     Vec3f scale = { 0.0f, 1.0f, 0.0f };
     Vec3f skew = { 0.0f, 0.0f, 1.0f };
+
     setVariables(particleSpawn, position, scale, skew);
-
-    Vec3f offset = { 0.0f, 0.0f, 0.5f };
-
     mParticleEffectPlayed = TRUE;
     mParticleData->spawnParticleEffect(PIGGYBACK_CHARGE, 0, &particleSpawn, &offset);
 }
 
 // Check if guarding
-u8 GuardOverhaul::guardCheck()
+inline u8 GuardOverhaul::guardCheck()
 {
-    u8 result = FALSE;
-
-    if (mGuardData->mEnableGuardState == TRUE)
-    {
-        result = TRUE;
-    }
-
-    return result;
+    return mGuardData->mEnableGuardState;
 }
 
 // Check if guard resulted in successful block
-u8 GuardOverhaul::blockStateHandler()
+u8 GuardOverhaul::blockCheck()
 {
-    u8 result = FALSE;
-
     if (mInvincibleData->mIntangibleData.mIntangibleFrames == 0)
     {
         mSuccessfulBlock = FALSE;
     }
 
-    if (mSuccessfulBlock == TRUE)
-    {
-        result = TRUE;
-    }
-
-    return result;
-}
-
-// Handle guard timer
-void GuardOverhaul::guardTimer()
-{
-    u8 guardState = guardCheck();
-
-    if ((guardState == FALSE) && (mCooldownFrames == 0))
-    {
-        if (mGuardFrames == 0)
-        {
-            return;
-        }
-
-        if (mResetFrames > GUARD_RESET)
-        {
-            resetGuardVariables();
-            return;
-        }
-
-        mResetFrames++;
-        return;
-    }
-
-    if (mGuardFrames > GUARD_INTERVAL)
-    {
-        onMiss();
-        return;
-    }
-
-    mGuardFrames++;
-    return;
+    return mSuccessfulBlock;
 }
 
 // Run if guard block was successful
@@ -110,7 +64,6 @@ void GuardOverhaul::onSuccess()
     if (mParticleEffectPlayed == FALSE)
     {
         setGuardParticleEffect();
-        mParticleEffectPlayed = TRUE;
     }
 
     if (mHPData->mCurrentHP < mHPData->mPreviousHP)
@@ -136,25 +89,65 @@ void GuardOverhaul::onMiss()
     return;
 }
 
+// Restore the guard timer to zero if not under cooldown
+void GuardOverhaul::restoreGuard()
+{
+    if (mGuardFrames == 0)
+    {
+        return;
+    }
+
+    if (mResetFrames > GUARD_RESET)
+    {
+        resetGuardVariables();
+        return;
+    }
+
+    mResetFrames++;
+    return;
+}
+
+// Handle guard timer
+void GuardOverhaul::guardTimer()
+{
+    u8 guardState = guardCheck();
+
+    if ((guardState == FALSE) && (mCooldownFrames == 0))
+    {
+        restoreGuard();
+        return;
+    }
+
+    if (mGuardFrames > GUARD_INTERVAL)
+    {
+        onMiss();
+        return;
+    }
+
+    mGuardFrames++;
+    return;
+}
+
+// Start the guard overhaul
 void GuardOverhaul::runGuardOverhaul(Hero * heroData)
 {
     mGuardData = heroData->mGuardData.loadPointer();
     mHPData = heroData->mHPData.loadPointer();
     mInvincibleData = heroData->mInvincibleData.loadPointer();
     mParticleData = &heroData->mParticleLoader.loadPointer()->mStatusParticles;
-    State * stateData = heroData->mStateData.loadPointer();
+    mStateData = heroData->mStateData.loadPointer();
+
+    u8 blockState = blockCheck();
+    u8 guardState = guardCheck();
 
     guardTimer();
-
-    u8 blockState = blockStateHandler();
-    u8 guardState = guardCheck();
 
     if (blockState == TRUE)
     {
         return;
     }
 
-    if ((guardState == TRUE) && (stateData->mIsVulnerable == FALSE))
+    if ((guardState == TRUE) && (mStateData->mIsVulnerable == FALSE))
     {
         onSuccess();
         return;
