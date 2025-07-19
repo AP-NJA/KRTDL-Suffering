@@ -7,6 +7,7 @@
 #include "Gameplay/Hero/Invincible.h"
 #include "Gameplay/Input.h"
 #include "Gameplay/Movement.h"
+#include "Gameplay/Particle.h"
 #include "Gameplay/State.h"
 #include <Common/Common.h>
 
@@ -16,7 +17,8 @@ typedef struct Hero
     u8 mDisplayHeroModel; // x67
     u8 x68[0xA4 - 0x68];
     ExplicitScopedPointer<Movement> mMovementData; // xA4
-    u8 xAC[0xBC - 0xAC];
+    u8 xAC[0xB4 - 0xAC];
+    ExplicitScopedPointer<ParticleLoader> mParticleLoader; // xB4;
     ExplicitScopedPointer<u32> mUnkPtr; // xBC
     u8 xC4[0xDC - 0xC4];
     ExplicitScopedPointer<Input> mInputData; // xDC
@@ -31,13 +33,6 @@ typedef struct Hero
     ExplicitScopedPointer<Guard> mGuardData; // x174
     u8 x17C[0x18C - 0x17C];
     ExplicitScopedPointer<u32> mUnkPtr2; // x18C
-
-    Movement * getVelocityData(); // 804EDAA4
-    Input * getInputData(); // 804EDAE4
-    State * getEffectData(); // 804EDAF4
-    Ability * getAbilityData(); // 804EDB0C
-    hero::Invincible * getInvincData(); // 804EDB1C
-    HP * getHPData(); // 804EDB24
 } Hero;
 
 typedef MutableArray<Hero *, 4> MutableHeroArray;
