@@ -1,26 +1,19 @@
 "start" = 0x80006310;
 
-"_ZN21ExplicitScopedPointerIjE14loadScopedDataEv" = 0x8017c9d8;
+"_Z12defineLayoutI7StarsUIEvPcPT_S1_" = 0x801b840c;
+"_Z14writeToConsolePKcz" = 0x8000d328;
+"_Z14writeToElementPKcPc" = 0x801b9b08;
+"_Z14destroyElementPcs" = 0x8017d074;
 
 "_ZN9Component14loadProtagInfoEPj" = 0x8023f2f4;
 "_ZN9Component12loadBossInfoEPj" = 0x8023F364;
 "_ZN9Component17loadElementLoaderEPj" = 0x8023ef18;
 
-"_ZN4Boss13getInvincDataEv" = 0x8025187C;
-"_ZN4Boss21getCooldownPeriodDataEv" = 0x8025188C;
-"_ZN4Boss9getHPDataEv" = 0x80251894;
+"_ZN8Particle19spawnParticleEffectEjjP13ParticleSpawnP4Vec3IfE" = 0x8034ec64;
 
-"_ZN10Intangible16updateFlashCycleEv" = 0x8034f8f0;
+"_Z9playSoundPjj" = 0x80703058;
 
-"_ZN7Ability14hasUniqueGuardEv" = 0x804d2cb4;
-
-"_Z12lbl_804eda6cP4Hero" = 0x804eda6c;
-"_ZN8Grounded15getGroundedDataEP4Hero" = 0x804eda94;
-"_ZN4Hero15getVelocityDataEv" = 0x804edaa4;
-"_ZN4Hero12getInputDataEv" = 0x804edae4;
-"_ZN6Effect13getEffectDataEP4Hero" = 0x804edaf4;
-"_ZN4Hero14getAbilityDataEv" = 0x804edb0c;
-"_ZN4Hero13getInvincDataEv" = 0x804edb1c;
-"_ZN4Hero9getHPDataEv" = 0x804edb24;
-
+"gSoundManager" = 0x80752780;
+"gParticleWidth" = 0x8088a728;
+"starCountLayout" = 0x808bdf84;
 "gMainPointer" = 0x809ed108;
