@@ -112,10 +112,28 @@ void GuardOverhaul::guardTimer()
 {
     u8 guardState = guardCheck();
 
-    if ((guardState == FALSE) && (mCooldownFrames == 0))
+    switch (guardState)
     {
-        restoreGuard();
-        return;
+        case FALSE:
+        {
+            if (mCooldownFrames == 0)
+            {
+                restoreGuard();
+                return;
+            }
+
+            break;
+        }
+        case TRUE:
+        {
+            if ((mSuccessfulBlock == FALSE) && (mStateData->mIsVulnerable == FALSE))
+            {
+                onSuccess();
+                return;
+            }
+
+            break;
+        }
     }
 
     if (mGuardFrames > GUARD_INTERVAL)
@@ -137,19 +155,10 @@ void GuardOverhaul::runGuardOverhaul(Hero * heroData)
     mParticleData = &heroData->mParticleLoader.loadPointer()->mStatusParticles;
     mStateData = heroData->mStateData.loadPointer();
 
-    u8 blockState = blockCheck();
-    u8 guardState = guardCheck();
-
     guardTimer();
 
-    if (blockState == TRUE)
+    if (blockCheck() == TRUE)
     {
-        return;
-    }
-
-    if ((guardState == TRUE) && (mStateData->mIsVulnerable == FALSE))
-    {
-        onSuccess();
         return;
     }
 
