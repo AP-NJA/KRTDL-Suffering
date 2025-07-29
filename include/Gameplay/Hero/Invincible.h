@@ -20,10 +20,9 @@ namespace hero
         u8 mRGBRedValue; // x20
         u8 mRGBGreenValue; // x21
         u8 mRGBBlueValue; // x22
-        // Custom functions
+
         void disableIntangibility();
         void enableIntangibility(u32 frames);
-        void invincibleTweaks();
     } Invincible;
 };
 #endif

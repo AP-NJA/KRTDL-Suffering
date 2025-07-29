@@ -20,17 +20,17 @@ typedef struct Guard
 
 typedef struct GuardOverhaul
 {
-    Guard * mGuardData;
-    HP * mHPData;
-    hero::Invincible * mInvincibleData;
-    Particle * mParticleData;
-    State * mStateData;
+    Guard * mGuardData; // x0
+    HP * mHPData; // x4
+    hero::Invincible * mInvincibleData; // x8
+    Particle * mParticleData; // xC
+    State * mStateData; // x10
 
-    u32 mGuardFrames;
-    u32 mResetFrames;
-    u32 mCooldownFrames;
-    u8 mSuccessfulBlock;
-    u8 mParticleEffectPlayed;
+    u32 mGuardFrames; // x14
+    u32 mResetFrames; // x18
+    u32 mCooldownFrames; // x1C
+    u8 mSuccessfulBlock; // x20
+    u8 mParticleEffectPlayed; // x21
 
     GuardOverhaul();
     void resetGuardVariables();

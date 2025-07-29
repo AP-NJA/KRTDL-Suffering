@@ -9,8 +9,6 @@ typedef struct Intangible
     u32 mFlashCycle; // x4
     u8 mUsingIntangibleMove; // x8
     u8 mGrabbedCandy; // x9
-
-    void updateFlashCycle(); // 8034F8F0
 } Intangible;
 
 #endif
