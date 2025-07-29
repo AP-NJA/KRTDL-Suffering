@@ -12,7 +12,7 @@ includeFolder = os.path.join("include")
 
 compilerFlags = [
     "-isystem", f"{includeFolder}",
-    "-O0",
+    "-O1",
     "-c"
 ]
 compilerFlagsString = " ".join([*compilerFlags])
@@ -29,7 +29,6 @@ codeFiles = [
     os.path.join("src", "InvincibleTweaks.cc"),
     os.path.join("src", "RemoveAbility.cc"),
     os.path.join("src", "main.cc")
-    # os.path.join("src", "abilitymodifier.cc")
 ]
 
 objectFiles = []
